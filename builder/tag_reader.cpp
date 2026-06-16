@@ -21,7 +21,8 @@ Helpers
 =====================================================================================================
 */
 
-static std::string tstring_to_utf8(const TagLib::String& s) {
+static std::string tstring_to_utf8(const TagLib::String& s) 
+{
     return s.to8Bit(true); // true = UTF-8
 }
 

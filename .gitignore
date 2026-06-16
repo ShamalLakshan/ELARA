@@ -39,3 +39,6 @@ vcpkg_installed/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Test Music Directories
+test/
