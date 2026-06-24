@@ -25,7 +25,7 @@ enum class LogLevel
 class Logger
 {
 private:
-    Logger() = default;
+    Logger();
     LogLevel m_Level;
     std::unique_ptr<FileWriter> m_FileWriter;
     bool m_ConsoleOutput;
@@ -35,16 +35,50 @@ public:
     static Logger& getInstance();
 
     //config
-    void setLevel(LogLevel& level);
-    void enableConsole(bool& enabled);
+    void setLevel(LogLevel logLevel);
+    void enableConsole(bool enabled);
     void setLogFile(const std::string& path, bool append = true); // might want to pass a fs::path later
 
     // Logs
-    void debug(const std::string& msg);
-    void info(const std::string& msg);
-    void warn(const std::string& msg);
-    void error(const std::string& msg);
-    void fatal(const std::string& msg);
+    template<typename... Args>
+    void debug(const Args&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << args);
+        log(LogLevel::DEBUG, oss.str());
+    }
+
+    template<typename... Args>
+    void info(const Args&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << args);
+        log(LogLevel::INFO, oss.str());
+    }
+
+    template<typename... Args>
+    void warn(const Args&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << args);
+        log(LogLevel::WARN, oss.str());
+    }
+
+    template<typename... Args>
+    void error(const Args&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << args);
+        log(LogLevel::ERROR, oss.str());
+    }
+
+    template<typename... Args>
+    void fatal(const Args&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << args);
+        log(LogLevel::FATAL, oss.str());
+    }
 
     // Delete copy/move for singleton
     Logger(const Logger&) = delete;

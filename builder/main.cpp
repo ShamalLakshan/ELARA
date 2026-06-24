@@ -9,6 +9,7 @@
 #include "tag_reader.h"
 #include "art_processor.h"
 #include "index_writer.h"
+#include "logger.h"
 
 /*
 =====================================================================================================
@@ -99,6 +100,14 @@ Entry Point
 */
 int main(int argc, char* argv[]) 
 {
+    auto& logger = Logger::getInstance();
+
+    // Logger config
+    logger.setLevel(LogLevel::DEBUG);
+
+    logger.setLogFile("./indexer.log", true);  // append mode
+    // logger.enableConsole(true);
+
     if (argc != 3) 
     {
         usage(argv[0]); return 1; 
@@ -110,11 +119,13 @@ int main(int argc, char* argv[])
     if (!std::filesystem::is_directory(music_root)) 
     {
         std::cerr << "[builder] not a directory: " << music_root << '\n';
+        logger.error("[builder] not a directory: " + music_root.string());
         return 1;
     }
     std::filesystem::create_directories(output_dir);
 
     std::cout << "[builder] scanning " << music_root << " ...\n";
+    logger.debug("[builder] scanning " + music_root.string() + " ...");
     auto files = collect(music_root);
 
     if (files.empty()) 
@@ -122,7 +133,8 @@ int main(int argc, char* argv[])
         std::cerr << "[builder] no .mp3 or .flac files found\n";
         return 1;
     }
-    std::cout << "[builder] found " << files.size() << " audio files\n";
+    // std::cout << "[builder] found " << files.size() << " audio files\n";
+    logger.info(" [builder] found " + std::to_string(files.size()) + " audio files");
 
     TagReader    tag_reader;
     ArtProcessor art_proc;

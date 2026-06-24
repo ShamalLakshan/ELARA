@@ -59,10 +59,10 @@ public:
     // -----------------------------------------------------------------
     // Public interface
     // -----------------------------------------------------------------
-    bool open(const std::string& path, bool append = true) 
+    bool open(const std::string& path, bool append = true)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        close();  // close any previously opened file
+        close_no_lock();
 
         m_path = path;
         m_append = append;
@@ -73,10 +73,15 @@ public:
         return m_isOpen;
     }
 
-    void close() 
+    void close()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        if (m_fileStream.is_open()) 
+        close_no_lock();
+    }
+
+    void close_no_lock()
+    {
+        if (m_fileStream.is_open())
         {
             m_fileStream.flush();
             m_fileStream.close();

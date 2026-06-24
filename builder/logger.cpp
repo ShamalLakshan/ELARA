@@ -1,5 +1,7 @@
 #include "logger.h"
 
+Logger::Logger() : m_Level(LogLevel::DEBUG), m_ConsoleOutput(true) {}
+
 Logger& Logger::getInstance() {
     static Logger instance;
     return instance;
@@ -61,39 +63,13 @@ std::string Logger::levelToString(LogLevel& level)
     }
 }
 
-
-void Logger::debug(const std::string& msg)   
-{
-    log(LogLevel::DEBUG, msg); 
-}
-
-void Logger::info(const std::string& msg)    
-{
-    log(LogLevel::INFO,  msg); 
-}
-
-void Logger::warn(const std::string& msg)    
-{
-    log(LogLevel::WARN,  msg); 
-}
-
-void Logger::error(const std::string& msg)   
-{
-    log(LogLevel::ERROR, msg); 
-}
-
-void Logger::fatal(const std::string& msg)   
-{
-    log(LogLevel::FATAL, msg); 
-}
-
-void Logger::setLevel(LogLevel& logLevel)
+void Logger::setLevel(LogLevel logLevel)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
     m_Level = logLevel;
 }
 
-void Logger::enableConsole(bool& enabled)
+void Logger::enableConsole(bool enabled)
 {
     std::lock_guard<std::mutex> lock(m_Mutex);
     m_ConsoleOutput = enabled;
