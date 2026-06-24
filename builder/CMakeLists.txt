@@ -3,6 +3,7 @@ add_executable(elara_builder
     tag_reader.cpp
     art_processor.cpp
     index_writer.cpp
+    logger.cpp
 )
 
 target_include_directories(elara_builder PRIVATE
